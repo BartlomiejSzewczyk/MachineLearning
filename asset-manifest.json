@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/MachineLearning/static/css/main.ab7136cd.chunk.css",
+    "main.js": "/MachineLearning/static/js/main.c3a6ef74.chunk.js",
+    "main.js.map": "/MachineLearning/static/js/main.c3a6ef74.chunk.js.map",
+    "runtime-main.js": "/MachineLearning/static/js/runtime-main.c8d8bc1c.js",
+    "runtime-main.js.map": "/MachineLearning/static/js/runtime-main.c8d8bc1c.js.map",
+    "static/js/2.dcc6f156.chunk.js": "/MachineLearning/static/js/2.dcc6f156.chunk.js",
+    "static/js/2.dcc6f156.chunk.js.map": "/MachineLearning/static/js/2.dcc6f156.chunk.js.map",
+    "static/js/3.e214d19a.chunk.js": "/MachineLearning/static/js/3.e214d19a.chunk.js",
+    "static/js/3.e214d19a.chunk.js.map": "/MachineLearning/static/js/3.e214d19a.chunk.js.map",
+    "index.html": "/MachineLearning/index.html",
+    "static/css/main.ab7136cd.chunk.css.map": "/MachineLearning/static/css/main.ab7136cd.chunk.css.map",
+    "static/js/2.dcc6f156.chunk.js.LICENSE.txt": "/MachineLearning/static/js/2.dcc6f156.chunk.js.LICENSE.txt",
+    "static/media/logo.103b5fa1.svg": "/MachineLearning/static/media/logo.103b5fa1.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c8d8bc1c.js",
+    "static/js/2.dcc6f156.chunk.js",
+    "static/css/main.ab7136cd.chunk.css",
+    "static/js/main.c3a6ef74.chunk.js"
+  ]
+}
