@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/Styles/checkboxes-styles.css"],"names":[],"mappings":"AAAA,qBACI,UAAW,CACX,WACJ","file":"main.2d58236c.chunk.css","sourcesContent":[".checkboxStyle > input{\n    width: 20px;\n    height: 20px;\n}"]}
