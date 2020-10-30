@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { device } from "../Styles/resolutions";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import Checkbox from "rc-checkbox";
 import "../Styles/checkboxes-styles.css";
@@ -49,31 +49,10 @@ const RatingLabel = styled.label`
   }
 `;
 
-const NextButton = styled.button`
-  position: absolute;
-  top: 55%;
-  left: calc(50% + 125px);
-  transform: translateX(-50%);
-  background: #484871;
-  width: 150px;
-  height: 50px;
-  border-radius: 20px;
-  border: 2px solid black;
-  color: white;
-  outline: none;
-  cursor: pointer;
-  @media ${device.laptop} {
-    font-size: 20px;
-  }
-  @media ${device.desktop} {
-    font-size: 22px;
-  }
-`;
-
 const ConfirmButton = styled.button`
   position: absolute;
   top: 55%;
-  left: calc(50% - 125px);
+  left: 50%;
   transform: translateX(-50%);
   background: #484871;
   width: 150px;
@@ -92,27 +71,28 @@ const ConfirmButton = styled.button`
 `;
 
 const MovieField = () => {
-  const movies = [];
-  movies.push({
-    value: `Shrek`,
-    label: `Shrek`,
-  });
-  movies.push({
-    value: `Shrek2`,
-    label: `Shrek2`,
-  });
-  movies.push({
-    value: `Shrek3`,
-    label: `Shrek3`,
-  });
-  movies.push({
-    value: `Shrek4`,
-    label: `Shrek4`,
-  });
-
+  const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState("");
   const [selectedRate, setSelectedRate] = useState("");
   const [ratingMap, setRatingMap] = useState(new Map());
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API}/movies`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        var movies = [];
+        data.forEach((movie) => {
+          movies.push({ value: movie.name, label: movie.name });
+        });
+        setMovies(movies);
+      });
+  }, []);
 
   const renderCheckboxes = () => {
     var rating = [];
@@ -131,6 +111,7 @@ const MovieField = () => {
             }
             onClick={(event) => {
               setSelectedRate(event.target.name);
+              handleNextMovie(event.target.name);
             }}
           />
         </RatingLabel>
@@ -152,6 +133,7 @@ const MovieField = () => {
           }
           onClick={(event) => {
             setSelectedRate(event.target.name);
+            handleNextMovie(event.target.name);
           }}
         />
       </RatingLabel>
@@ -159,9 +141,9 @@ const MovieField = () => {
     return rating;
   };
 
-  const handleNextMovie = () => {
+  const handleNextMovie = (rate) => {
     var mapCopy = new Map(ratingMap);
-    mapCopy.set(selectedMovie.value, selectedRate);
+    mapCopy.set(selectedMovie.value, rate);
     setRatingMap(mapCopy);
     var newMovieIndex = 0;
     movies.forEach((movie, index) => {
@@ -210,10 +192,9 @@ const MovieField = () => {
         />
       </SelectField>
       {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
-      {selectedRate && ratingMap.size !== 4 ? (
-        <NextButton onClick={handleNextMovie}>Dalej</NextButton>
+      {ratingMap.size === movies.length && movies.length ? (
+        <ConfirmButton>Wyślij</ConfirmButton>
       ) : null}
-      {ratingMap.size === 4 ? <ConfirmButton>Wyślij</ConfirmButton> : null}
     </>
   );
 };
