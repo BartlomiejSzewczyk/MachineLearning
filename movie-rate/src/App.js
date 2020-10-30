@@ -2,6 +2,7 @@ import MovieField from "./Movie/MovieField";
 import styled from "styled-components";
 import OscarIcon from "./Icons/oscarIcon";
 import StarIcon from "./Icons/starIcon";
+import { useEffect, useState } from "react";
 
 const Background = styled.div`
   position: absolute;
