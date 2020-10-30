@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 const Icon = styled.svg`
   position: absolute;
-  height: 50%;
-  top: 25%;
+  width: 20%;
+  top: 50%;
+  transform: translateY(-50%);
   right: 50px;
 `;
 

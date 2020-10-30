@@ -16,7 +16,7 @@ function App() {
   return (
     <Background>
       <OscarIcon />
-      <StarIcon />
+      {/* <StarIcon /> */}
       <MovieField />
     </Background>
   );

@@ -10,7 +10,7 @@ const Header = styled.div`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 20%;
+  top: 10%;
   @media ${device.laptop} {
     font-size: 40px;
   }
@@ -21,7 +21,7 @@ const Header = styled.div`
 
 const SelectField = styled.div`
   position: absolute;
-  top: 30%;
+  top: 20%;
   left: 50%;
   transform: translateX(-50%);
   @media ${device.laptop} {
@@ -34,7 +34,7 @@ const SelectField = styled.div`
 
 const RatingField = styled.div`
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 50%;
   transform: translateX(-50%);
   z-index: -1;
@@ -52,7 +52,7 @@ const RatingLabel = styled.label`
 
 const ConfirmButton = styled.button`
   position: absolute;
-  top: 55%;
+  top: 45%;
   left: 50%;
   transform: translateX(-50%);
   background: #484871;
@@ -71,11 +71,20 @@ const ConfirmButton = styled.button`
   }
 `;
 
+const Poster = styled.img`
+  position: absolute;
+  width: 20%;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 50px;
+`;
+
 const MovieField = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState("");
   const [selectedRate, setSelectedRate] = useState("");
   const [ratingMap, setRatingMap] = useState(new Map());
+  const [posterUrl, setPosterUrl] = useState("");
 
   useEffect(() => {
     const dbRef = firebase.database().ref().child("movies");
@@ -84,9 +93,14 @@ const MovieField = () => {
       snap.forEach((movie) => {
         moviesFromDb.push({ value: movie.key, label: movie.key });
       });
+      setMovies(moviesFromDb);
+      setSelectedMovie(moviesFromDb[0]);
     });
-    setMovies(moviesFromDb);
   }, []);
+
+  useEffect(() => {
+    getMovieInfo(selectedMovie);
+  }, [selectedMovie]);
 
   const renderCheckboxes = () => {
     var rating = [];
@@ -160,6 +174,23 @@ const MovieField = () => {
     }
   };
 
+  const getMovieInfo = (movie) => {
+    const dbRef = firebase
+      .database()
+      .ref()
+      .child("movies")
+      .child(`${movie.value}`);
+    dbRef.on("value", (snap) => {
+      fetch(
+        `https://api.themoviedb.org/3/movie/${snap.val()}?api_key=72ed6ba834b7f05dc61a1e4fc27613dd&language=pl`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setPosterUrl(data.poster_path);
+        });
+    });
+  };
+
   const findFreeIndex = () => {
     var freeIndex = movies.length;
     movies.forEach((movie, index) => {
@@ -194,6 +225,12 @@ const MovieField = () => {
           noResultsText={`Nie znaleziono wyników`}
         />
       </SelectField>
+      {posterUrl ? (
+        <Poster
+          alt="poster"
+          src={`https://image.tmdb.org/t/p/original${posterUrl}`}
+        />
+      ) : null}
       {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
       {ratingMap.size === movies.length && movies.length ? (
         <ConfirmButton onClick={handleConfirmButton}>Wyślij</ConfirmButton>

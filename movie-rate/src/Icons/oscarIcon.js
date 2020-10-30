@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 const Icon = styled.svg`
   position: absolute;
-  height: 80%;
-  top: 10%;
+  width: 30%;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 export default function oscarIcon() {
