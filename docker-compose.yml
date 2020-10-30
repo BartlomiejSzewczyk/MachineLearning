@@ -1,0 +1,44 @@
+version: '3'
+services:
+  postgres:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_PORT
+      - POSTGRES_HOST_AUTH_METHOD=trust
+  movie-rate-client:
+    build:
+      context: ./movie-rate-client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./movie-rate-client:/app
+    ports:
+      - '3000:3000'
+    restart: on-failure
+    container_name: movie-rate-client
+  movie-rate-server:
+    build:
+      context: ./movie-rate-server
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3001:3001'
+    restart: on-failure
+    container_name: movie-rate-server
+    volumes:
+      - /app/node_modules # Inside the container, don't try to override this folder, just leave as is
+      - ./movie-rate-server:/app # Look at the server directory and copy everything into the app folder in the container
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_PORT
+      - POSTGRES_HOST=postgres
