@@ -6,11 +6,17 @@ import Checkbox from "rc-checkbox";
 import "../Styles/checkboxes-styles.css";
 import firebase from "../Firebase/firebase";
 
-const Header = styled.div`
+const SelectMovieField = styled.div`
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   top: 10%;
+  left: 35%;
+  width: 30%;
+  height: 80%;
+`;
+
+const Header = styled.div`
+  position: relative;
+  text-align: center;
   @media ${device.laptop} {
     font-size: 40px;
   }
@@ -20,24 +26,16 @@ const Header = styled.div`
 `;
 
 const SelectField = styled.div`
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  @media ${device.laptop} {
-    width: 350px;
-  }
-  @media ${device.desktop} {
-    width: 400px;
-  }
+  position: relative;
+  margin-top: 20px;
+  width: 80%;
+  left: 10%;
 `;
 
 const RatingField = styled.div`
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: -1;
+  position: relative;
+  margin-top: 20px;
+  text-align: center;
 `;
 
 const RatingLabel = styled.label`
@@ -51,18 +49,19 @@ const RatingLabel = styled.label`
 `;
 
 const ConfirmButton = styled.button`
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin-top: 20px;
   background: #484871;
   width: 150px;
+  max-width: 30%;
   height: 50px;
   border-radius: 20px;
   border: 2px solid black;
   color: white;
   outline: none;
   cursor: pointer;
+  left: 50%;
+  transform: translateX(-50%);
   @media ${device.laptop} {
     font-size: 20px;
   }
@@ -79,12 +78,28 @@ const Poster = styled.img`
   right: 50px;
 `;
 
+const MovieInfo = styled.div`
+  position: absolute;
+  top: 10%;
+  max-width: 30%;
+  left: 3%;
+  @media ${device.laptop} {
+    font-size: 18px;
+  }
+  @media ${device.desktop} {
+    font-size: 20px;
+  }
+`;
+
 const MovieField = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState("");
   const [selectedRate, setSelectedRate] = useState("");
   const [ratingMap, setRatingMap] = useState(new Map());
   const [posterUrl, setPosterUrl] = useState("");
+  const [description, setDescription] = useState("");
+  const [movieYear, setMovieYear] = useState("");
+  const [movieGenres, setMovieGenres] = useState("");
 
   useEffect(() => {
     const dbRef = firebase.database().ref().child("movies");
@@ -187,6 +202,9 @@ const MovieField = () => {
         .then((response) => response.json())
         .then((data) => {
           setPosterUrl(data.poster_path);
+          setDescription(data.overview);
+          setMovieYear(data.release_date);
+          setMovieGenres(data.genres[0].name);
         });
     });
   };
@@ -215,25 +233,44 @@ const MovieField = () => {
 
   return (
     <>
-      <Header>Wybierz film do oceny:</Header>
-      <SelectField>
-        <Select
-          value={selectedMovie}
-          onChange={setSelectedMovie}
-          options={movies}
-          placeholder={`Wybierz z listy ...`}
-          noResultsText={`Nie znaleziono wyników`}
-        />
-      </SelectField>
+      <SelectMovieField>
+        <Header>Wybierz film do oceny:</Header>
+        <SelectField>
+          <Select
+            value={selectedMovie}
+            onChange={setSelectedMovie}
+            options={movies}
+            placeholder={`Wybierz z listy ...`}
+            noResultsText={`Nie znaleziono wyników`}
+          />
+        </SelectField>
+        {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
+        {ratingMap.size === movies.length && movies.length ? (
+          <ConfirmButton onClick={handleConfirmButton}>Wyślij</ConfirmButton>
+        ) : null}
+      </SelectMovieField>
+      <MovieInfo>
+        {movieGenres ? `Gatunek: ${movieGenres}` : null}
+        {movieGenres ? (
+          <>
+            <br />
+            <br />
+          </>
+        ) : null}
+        {movieYear ? `Data premiery: ${movieYear}` : null}
+        {movieYear ? (
+          <>
+            <br />
+            <br />
+          </>
+        ) : null}
+        {description}
+      </MovieInfo>
       {posterUrl ? (
         <Poster
           alt="poster"
           src={`https://image.tmdb.org/t/p/original${posterUrl}`}
         />
-      ) : null}
-      {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
-      {ratingMap.size === movies.length && movies.length ? (
-        <ConfirmButton onClick={handleConfirmButton}>Wyślij</ConfirmButton>
       ) : null}
     </>
   );
