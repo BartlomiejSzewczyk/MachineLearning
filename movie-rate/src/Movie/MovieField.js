@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const SelectMovieField = styled.div`
   position: absolute;
-  top: 20%;
+  top: 15%;
   left: 35%;
   width: 30%;
   height: 80%;
@@ -92,7 +92,7 @@ const Poster = styled.img`
 
 const MovieInfo = styled.div`
   position: absolute;
-  top: 10%;
+  top: 15%;
   max-width: 30%;
   left: 3%;
   @media ${device.laptop} {
