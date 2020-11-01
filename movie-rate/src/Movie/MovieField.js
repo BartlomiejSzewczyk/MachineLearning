@@ -5,10 +5,11 @@ import Select from "react-select";
 import Checkbox from "rc-checkbox";
 import "../Styles/checkboxes-styles.css";
 import firebase from "../Firebase/firebase";
+import { toast } from "react-toastify";
 
 const SelectMovieField = styled.div`
   position: absolute;
-  top: 10%;
+  top: 20%;
   left: 35%;
   width: 30%;
   height: 80%;
@@ -51,7 +52,18 @@ const RatingLabel = styled.label`
 const ConfirmButton = styled.button`
   position: relative;
   margin-top: 20px;
-  background: #484871;
+  background: ${(props) => {
+    if (props.disabled) {
+      return "##4848716e";
+    } else {
+      return "#484871";
+    }
+  }};
+  pointer-events: ${(props) => {
+    if (props.disabled) {
+      return "none";
+    }
+  }};
   width: 150px;
   max-width: 30%;
   height: 50px;
@@ -100,6 +112,9 @@ const MovieField = () => {
   const [description, setDescription] = useState("");
   const [movieYear, setMovieYear] = useState("");
   const [movieGenres, setMovieGenres] = useState("");
+  const [isRated, setRatedState] = useState(false);
+
+  const notify = () => toast("Dziękujęmy za ocenienie filmów !");
 
   useEffect(() => {
     const dbRef = firebase.database().ref().child("movies");
@@ -124,7 +139,6 @@ const MovieField = () => {
         <RatingLabel for={i}>
           {i}
           <Checkbox
-            disabled={ratingMap.get(selectedMovie.value)}
             className="checkboxStyle"
             name={i}
             checked={
@@ -136,7 +150,9 @@ const MovieField = () => {
               setSelectedRate(event.target.name);
               handleNextMovie(event.target.name);
             }}
-          />
+          >
+            test
+          </Checkbox>
         </RatingLabel>
       );
     }
@@ -146,7 +162,6 @@ const MovieField = () => {
       <RatingLabel for={-1}>
         Nie znam tego filmu
         <Checkbox
-          disabled={ratingMap.get(selectedMovie.value)}
           className="checkboxStyle"
           name={-1}
           checked={
@@ -204,7 +219,9 @@ const MovieField = () => {
           setPosterUrl(data.poster_path);
           setDescription(data.overview);
           setMovieYear(data.release_date);
-          setMovieGenres(data.genres[0].name);
+          if (data.genres) {
+            setMovieGenres(data.genres[0].name);
+          }
         });
     });
   };
@@ -229,6 +246,8 @@ const MovieField = () => {
       ratingObj[name] = rate;
     });
     dbRef.push(ratingObj);
+    notify();
+    setRatedState(true);
   };
 
   return (
@@ -246,7 +265,9 @@ const MovieField = () => {
         </SelectField>
         {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
         {ratingMap.size === movies.length && movies.length ? (
-          <ConfirmButton onClick={handleConfirmButton}>Wyślij</ConfirmButton>
+          <ConfirmButton onClick={handleConfirmButton} disabled={isRated}>
+            Wyślij
+          </ConfirmButton>
         ) : null}
       </SelectMovieField>
       <MovieInfo>
