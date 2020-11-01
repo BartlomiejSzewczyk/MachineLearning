@@ -129,6 +129,12 @@ const MovieField = () => {
   }, []);
 
   useEffect(() => {
+    if (movies.length !== 0) {
+      setSelectedMovie(movies[0]);
+    }
+  }, [movies]);
+
+  useEffect(() => {
     getMovieInfo(selectedMovie);
   }, [selectedMovie]);
 
