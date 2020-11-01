@@ -210,6 +210,10 @@ const MovieField = () => {
   };
 
   const getMovieInfo = (movie) => {
+    if(!movie) {
+      return;
+    }
+
     const dbRef = firebase
       .database()
       .ref()
