@@ -124,14 +124,9 @@ const MovieField = () => {
         moviesFromDb.push({ value: movie.key, label: movie.key });
       });
       setMovies(moviesFromDb);
+      setSelectedMovie(moviesFromDb[0]);
     });
   }, []);
-
-  useEffect(() => {
-    if (movies.length !== 0) {
-      setSelectedMovie(movies[0]);
-    }
-  }, [movies]);
 
   useEffect(() => {
     getMovieInfo(selectedMovie);
@@ -210,6 +205,10 @@ const MovieField = () => {
   };
 
   const getMovieInfo = (movie) => {
+    if(!movie) {
+      return;
+    }
+
     const dbRef = firebase
       .database()
       .ref()
