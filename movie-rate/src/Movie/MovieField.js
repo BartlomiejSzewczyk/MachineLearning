@@ -124,7 +124,6 @@ const MovieField = () => {
         moviesFromDb.push({ value: movie.key, label: movie.key });
       });
       setMovies(moviesFromDb);
-      setSelectedMovie(moviesFromDb[0]);
     });
   }, []);
 
