@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MachineLearning/static/css/main.d3461133.chunk.css",
-    "main.js": "/MachineLearning/static/js/main.25078000.chunk.js",
-    "main.js.map": "/MachineLearning/static/js/main.25078000.chunk.js.map",
+    "main.js": "/MachineLearning/static/js/main.4006220a.chunk.js",
+    "main.js.map": "/MachineLearning/static/js/main.4006220a.chunk.js.map",
     "runtime-main.js": "/MachineLearning/static/js/runtime-main.3d8a26c7.js",
     "runtime-main.js.map": "/MachineLearning/static/js/runtime-main.3d8a26c7.js.map",
     "static/css/2.ea7a7c29.chunk.css": "/MachineLearning/static/css/2.ea7a7c29.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.ea7a7c29.chunk.css",
     "static/js/2.bd3359d6.chunk.js",
     "static/css/main.d3461133.chunk.css",
-    "static/js/main.25078000.chunk.js"
+    "static/js/main.4006220a.chunk.js"
   ]
 }
