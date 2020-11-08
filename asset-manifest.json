@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/MachineLearning/static/css/main.3391e0ab.chunk.css",
-    "main.js": "/MachineLearning/static/js/main.5ec7d7e8.chunk.js",
-    "main.js.map": "/MachineLearning/static/js/main.5ec7d7e8.chunk.js.map",
-    "runtime-main.js": "/MachineLearning/static/js/runtime-main.8301c762.js",
-    "runtime-main.js.map": "/MachineLearning/static/js/runtime-main.8301c762.js.map",
-    "static/css/2.ccc6f86f.chunk.css": "/MachineLearning/static/css/2.ccc6f86f.chunk.css",
-    "static/js/2.271d90a6.chunk.js": "/MachineLearning/static/js/2.271d90a6.chunk.js",
-    "static/js/2.271d90a6.chunk.js.map": "/MachineLearning/static/js/2.271d90a6.chunk.js.map",
-    "static/js/3.3023ef8a.chunk.js": "/MachineLearning/static/js/3.3023ef8a.chunk.js",
-    "static/js/3.3023ef8a.chunk.js.map": "/MachineLearning/static/js/3.3023ef8a.chunk.js.map",
+    "main.css": "/MachineLearning/static/css/main.d3461133.chunk.css",
+    "main.js": "/MachineLearning/static/js/main.0cf505cd.chunk.js",
+    "main.js.map": "/MachineLearning/static/js/main.0cf505cd.chunk.js.map",
+    "runtime-main.js": "/MachineLearning/static/js/runtime-main.3d8a26c7.js",
+    "runtime-main.js.map": "/MachineLearning/static/js/runtime-main.3d8a26c7.js.map",
+    "static/css/2.ea7a7c29.chunk.css": "/MachineLearning/static/css/2.ea7a7c29.chunk.css",
+    "static/js/2.bd3359d6.chunk.js": "/MachineLearning/static/js/2.bd3359d6.chunk.js",
+    "static/js/2.bd3359d6.chunk.js.map": "/MachineLearning/static/js/2.bd3359d6.chunk.js.map",
+    "static/js/3.0d397718.chunk.js": "/MachineLearning/static/js/3.0d397718.chunk.js",
+    "static/js/3.0d397718.chunk.js.map": "/MachineLearning/static/js/3.0d397718.chunk.js.map",
     "index.html": "/MachineLearning/index.html",
-    "static/css/2.ccc6f86f.chunk.css.map": "/MachineLearning/static/css/2.ccc6f86f.chunk.css.map",
-    "static/css/main.3391e0ab.chunk.css.map": "/MachineLearning/static/css/main.3391e0ab.chunk.css.map",
-    "static/js/2.271d90a6.chunk.js.LICENSE.txt": "/MachineLearning/static/js/2.271d90a6.chunk.js.LICENSE.txt"
+    "static/css/2.ea7a7c29.chunk.css.map": "/MachineLearning/static/css/2.ea7a7c29.chunk.css.map",
+    "static/css/main.d3461133.chunk.css.map": "/MachineLearning/static/css/main.d3461133.chunk.css.map",
+    "static/js/2.bd3359d6.chunk.js.LICENSE.txt": "/MachineLearning/static/js/2.bd3359d6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.8301c762.js",
-    "static/css/2.ccc6f86f.chunk.css",
-    "static/js/2.271d90a6.chunk.js",
-    "static/css/main.3391e0ab.chunk.css",
-    "static/js/main.5ec7d7e8.chunk.js"
+    "static/js/runtime-main.3d8a26c7.js",
+    "static/css/2.ea7a7c29.chunk.css",
+    "static/js/2.bd3359d6.chunk.js",
+    "static/css/main.d3461133.chunk.css",
+    "static/js/main.0cf505cd.chunk.js"
   ]
 }
