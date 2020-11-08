@@ -103,6 +103,18 @@ const MovieInfo = styled.div`
   }
 `;
 
+const Counter = styled.div`
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+  @media ${device.laptop} {
+    font-size: 18px;
+  }
+  @media ${device.desktop} {
+    font-size: 20px;
+  }
+`;
+
 const MovieField = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState("");
@@ -123,9 +135,19 @@ const MovieField = () => {
       snap.forEach((movie) => {
         moviesFromDb.push({ value: movie.key, label: movie.key });
       });
+      moviesFromDb = shuffle(moviesFromDb);
       setMovies(moviesFromDb);
       setSelectedMovie(moviesFromDb[0]);
     });
+    if (window.sessionStorage.getItem("ratingMap")) {
+      var mapCopy = new Map();
+      for (const [key, value] of Object.entries(
+        JSON.parse(window.sessionStorage.ratingMap)
+      )) {
+        mapCopy.set(key, value);
+      }
+      setRatingMap(mapCopy);
+    }
   }, []);
 
   useEffect(() => {
@@ -202,10 +224,12 @@ const MovieField = () => {
         setSelectedRate("");
       }
     }
+    const ratingObj = Object.fromEntries(mapCopy);
+    window.sessionStorage.setItem("ratingMap", JSON.stringify(ratingObj));
   };
 
   const getMovieInfo = (movie) => {
-    if(!movie) {
+    if (!movie) {
       return;
     }
 
@@ -254,6 +278,22 @@ const MovieField = () => {
     setRatedState(true);
   };
 
+  const shuffle = (array) => {
+    var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
+
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  };
+
   return (
     <>
       <SelectMovieField>
@@ -268,6 +308,11 @@ const MovieField = () => {
           />
         </SelectField>
         {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
+        {movies.length ? (
+          <Counter>
+            {ratingMap.size} / {movies.length}
+          </Counter>
+        ) : null}
         {ratingMap.size === movies.length && movies.length ? (
           <ConfirmButton onClick={handleConfirmButton} disabled={isRated}>
             Wyślij
