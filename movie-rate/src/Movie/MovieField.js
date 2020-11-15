@@ -51,7 +51,7 @@ const RatingLabel = styled.label`
 
 const ConfirmButton = styled.button`
   position: relative;
-  margin-top: 20px;
+  margin-top: 10px;
   background: ${(props) => {
     if (props.disabled) {
       return "##4848716e";
@@ -68,7 +68,7 @@ const ConfirmButton = styled.button`
   max-width: 30%;
   height: 50px;
   border-radius: 20px;
-  border: 2px solid black;
+  border: 1px solid black;
   color: white;
   outline: none;
   cursor: pointer;
@@ -115,6 +115,30 @@ const Counter = styled.div`
   }
 `;
 
+const SkipButton = styled.button`
+  position: relative;
+  margin-top: 10px;
+  pointer-events: ${(props) => {
+    if (props.disabled) {
+      return "none";
+    }
+  }};
+  border-radius: 20px;
+  border: 1px solid black;
+  outline: none;
+  cursor: pointer;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+  padding 5px 10px 5px 10px;
+  @media ${device.laptop} {
+    font-size: 16px;
+  }
+  @media ${device.desktop} {
+    font-size: 18px;
+  }
+`;
+
 const MovieField = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState("");
@@ -129,24 +153,53 @@ const MovieField = () => {
   const notify = () => toast("Dziękujęmy za ocenienie filmów !");
 
   useEffect(() => {
-    const dbRef = firebase.database().ref().child("movies");
-    var moviesFromDb = [];
-    dbRef.on("value", (snap) => {
-      snap.forEach((movie) => {
-        moviesFromDb.push({ value: movie.key, label: movie.key });
-      });
-      moviesFromDb = shuffle(moviesFromDb);
-      setMovies(moviesFromDb);
-      setSelectedMovie(moviesFromDb[0]);
-    });
+    var mapCopy = new Map();
     if (window.sessionStorage.getItem("ratingMap")) {
-      var mapCopy = new Map();
       for (const [key, value] of Object.entries(
         JSON.parse(window.sessionStorage.ratingMap)
       )) {
         mapCopy.set(key, value);
       }
       setRatingMap(mapCopy);
+    }
+    if (
+      window.sessionStorage.getItem("movies") &&
+      window.sessionStorage.getItem("ratingMap")
+    ) {
+      var moviesFromStorage = JSON.parse(
+        window.sessionStorage.getItem("movies")
+      );
+      var moviesArray = [];
+      Object.keys(moviesFromStorage).forEach(function (key, index) {
+        moviesArray.push({
+          value: moviesFromStorage[key],
+          label: moviesFromStorage[key],
+        });
+      });
+      setMovies(moviesArray);
+      var isSelectedMovie = false;
+      moviesArray.forEach((movie) => {
+        if (!mapCopy.get(movie.value) && !isSelectedMovie) {
+          setSelectedMovie(movie);
+          isSelectedMovie = true;
+        }
+      });
+    } else {
+      const dbRef = firebase.database().ref().child("movies");
+      var moviesFromDb = [];
+      dbRef.on("value", (snap) => {
+        snap.forEach((movie) => {
+          moviesFromDb.push({ value: movie.key, label: movie.key });
+        });
+        moviesFromDb = shuffle(moviesFromDb);
+        setMovies(moviesFromDb);
+        setSelectedMovie(moviesFromDb[0]);
+        var moviesObj = {};
+        moviesFromDb.forEach((movie, index) => {
+          moviesObj[index] = movie.value;
+        });
+        window.sessionStorage.setItem("movies", JSON.stringify(moviesObj));
+      });
     }
   }, []);
 
@@ -294,6 +347,28 @@ const MovieField = () => {
     return array;
   };
 
+  const skipMovie = () => {
+    var newMovieIndex = 0;
+    movies.forEach((movie, index) => {
+      if (movie.value === selectedMovie.value) {
+        newMovieIndex = index + 1;
+      }
+    });
+    if (
+      movies.length > newMovieIndex &&
+      !ratingMap.get(movies[newMovieIndex].value)
+    ) {
+      setSelectedMovie(movies[newMovieIndex]);
+      setSelectedRate("");
+    } else {
+      newMovieIndex = findFreeIndex();
+      if (movies.length > newMovieIndex) {
+        setSelectedMovie(movies[newMovieIndex]);
+        setSelectedRate("");
+      }
+    }
+  };
+
   return (
     <>
       <SelectMovieField>
@@ -313,6 +388,7 @@ const MovieField = () => {
             {ratingMap.size} / {movies.length}
           </Counter>
         ) : null}
+        <SkipButton onClick={skipMovie}>Pomiń</SkipButton>
         {ratingMap.size === movies.length && movies.length ? (
           <ConfirmButton onClick={handleConfirmButton} disabled={isRated}>
             Wyślij
