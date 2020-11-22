@@ -139,6 +139,28 @@ const SkipButton = styled.button`
   }
 `;
 
+const CustomSelect = styled.select`
+  font-size: 18px;
+  max-width: 450px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+`;
+
+const CustomOption = styled.option`
+  font-size: 18px;
+  max-width: 450px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background-color: ${(props) => {
+    if (props.skipped) {
+      return "#c3c30b";
+    }
+  }};
+`;
+
 const MovieField = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState("");
@@ -149,11 +171,18 @@ const MovieField = () => {
   const [movieYear, setMovieYear] = useState("");
   const [movieGenres, setMovieGenres] = useState("");
   const [isRated, setRatedState] = useState(false);
+  const [skippedMovies, setSkippedMovies] = useState({});
 
   const notify = () => toast("Dziękujęmy za ocenienie filmów !");
 
   useEffect(() => {
     var mapCopy = new Map();
+    if (window.sessionStorage.getItem("skippedMovies")) {
+      var skippedMoviesCopy = JSON.parse(
+        window.sessionStorage.getItem("skippedMovies")
+      );
+      setSkippedMovies(skippedMoviesCopy);
+    }
     if (window.sessionStorage.getItem("ratingMap")) {
       for (const [key, value] of Object.entries(
         JSON.parse(window.sessionStorage.ratingMap)
@@ -255,6 +284,15 @@ const MovieField = () => {
   };
 
   const handleNextMovie = (rate) => {
+    if (skippedMovies[selectedMovie.value]) {
+      var skippedMoviesCopy = JSON.parse(JSON.stringify(skippedMovies));
+      skippedMoviesCopy[selectedMovie.value] = false;
+      setSkippedMovies(skippedMoviesCopy);
+      window.sessionStorage.setItem(
+        "skippedMovies",
+        JSON.stringify(skippedMoviesCopy)
+      );
+    }
     var mapCopy = new Map(ratingMap);
     mapCopy.set(selectedMovie.value, rate);
     setRatingMap(mapCopy);
@@ -349,6 +387,13 @@ const MovieField = () => {
 
   const skipMovie = () => {
     var newMovieIndex = 0;
+    var skippedMoviesCopy = JSON.parse(JSON.stringify(skippedMovies));
+    skippedMoviesCopy[selectedMovie.value] = true;
+    setSkippedMovies(skippedMoviesCopy);
+    window.sessionStorage.setItem(
+      "skippedMovies",
+      JSON.stringify(skippedMoviesCopy)
+    );
     movies.forEach((movie, index) => {
       if (movie.value === selectedMovie.value) {
         newMovieIndex = index + 1;
@@ -369,18 +414,45 @@ const MovieField = () => {
     }
   };
 
+  const renderOptions = () => {
+    var optionsArray = [];
+    movies.forEach((movie) => {
+      optionsArray.push(
+        <CustomOption skipped={skippedMovies[movie.value]} value={movie.value}>
+          {movie.value}
+        </CustomOption>
+      );
+    });
+    return optionsArray;
+  };
+
+  const handleSelect = (event) => {
+    setSelectedMovie({
+      value: event.target.value,
+      label: event.target.value,
+    });
+  };
+
   return (
     <>
       <SelectMovieField>
         <Header>Wybierz film do oceny:</Header>
         <SelectField>
-          <Select
+          {/* <Select
             value={selectedMovie}
             onChange={setSelectedMovie}
             options={movies}
             placeholder={`Wybierz z listy ...`}
             noResultsText={`Nie znaleziono wyników`}
-          />
+          /> */}
+          <CustomSelect
+            value={selectedMovie.value}
+            onChange={(event) => {
+              handleSelect(event);
+            }}
+          >
+            {renderOptions()}
+          </CustomSelect>
         </SelectField>
         {selectedMovie ? <RatingField>{renderCheckboxes()}</RatingField> : null}
         {movies.length ? (
